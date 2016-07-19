@@ -1,0 +1,22 @@
+{
+  "name": "unpreptool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/paulehoffman/node-rfc-unpreptool.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/paulehoffman/node-rfc-unpreptool/issues"
+  },
+  "homepage": "https://github.com/paulehoffman/node-rfc-unpreptool#readme",
+  "dependencies": {
+    "xmljade": "^1.0"
+  }
+}
