@@ -1,0 +1,17 @@
+Remove elements
+	<boilerplate>		
+Remove attributes
+	*/@slugifiedName
+	*/@pn
+	*/@xml:base
+	link/@doi, link/@issn, link/@convertedFrom
+	relref/@derivedLink
+	rfc/@prepTime, rfc/@expiresDate, rfc/@scripts
+	section/@toc (all non-valuable attributes)
+	xref/@derivedContent
+Convert
+	<date> to <date/>
+	artwork/@src=data: to src=base64decode(blah)
+	artwork/@originalSrc to src= and output a file
+		Check for SVG, ask joe
+	sourcecode/@originalSrc to src= and output a file

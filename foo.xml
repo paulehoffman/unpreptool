@@ -1,0 +1,9 @@
+<html>
+<rfc prepTime="2016-05-13T20:48:25.031Z">
+  <front>
+    <boilerplate/>
+  </front>
+</rfc>
+<foo one="1" two="2" />
+<foo1 colour="red" name="Joe"><somechild/></foo1>
+</html>

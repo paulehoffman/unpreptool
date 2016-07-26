@@ -1,0 +1,92 @@
+include ./elements.jade
+
+//- Remove <boilerplate>
+mixin boilerplate(e)
+	//- This is just here to finish the function
+
+//- Remove */@slugifiedName, */@pn, */@xml:base
+	//- ################ Find out how to get all elements
+	- var title = e.attr('title')
+	if title
+		- e.attr("doi").remove()
+
+//- Remove link/@doi, link/@issn, link/@convertedFrom
+mixin link(e)
+	- var a = $att(e)
+	- e.attr("doi").remove()
+	- e.attr("issn").remove()
+	- e.attr("convertedFrom").remove()
+	+elem(e)
+
+//- Remove relref/@derivedLink
+mixin relref(e)
+	- var a = $att(e)
+	- e.attr("derivedLink").remove()
+	+elem(e)
+
+//- Remove rfc/@prepTime, rfc/@expiresDate, rfc/@scripts
+mixin rfc(e)
+	- var a = $att(e)
+	- e.attr("prepTime").remove()
+	- e.attr("expiresDate").remove()
+	- e.attr("scripts").remove()
+	+elem(e)
+
+//- Remove section/@toc (all non-valuable attributes)
+mixin section(e)
+	- var a = $att(e)
+	//- ###################### Logic from 5.2.7 goes here
+	+elem(e)
+
+//- Remove xref/@derivedContent
+mixin xref(e)
+	- var a = $att(e)
+	- e.attr("derivedContent").remove()
+	+elem(e)
+
+//- Convert <date> to <date/>
+mixin date(e)
+	date
+
+//- Convert artwork/@src=data: to src=base64decode(blah)
+//- Convert artwork/@originalSrc to src= and output a file
+//- Check for SVG, ask joe
+mixin artwork(e)
+	- var src = e.attr('src')
+	if src
+		- srcvalue = src.value()
+		- if srcvalue.beginswith("data:") //- ################ begins with "data:"
+			- thedata = srcvalue[5:] //- ##################### get past data:
+			- thebase64value = thedata.base64decode() //- ################# base64decode(thedata)
+			e.attr(src, thebase64value)
+		+elem(e)
+	- var originalSrc = e.attr('originalSrc')
+	if originalSrc
+		e.attr('src', originalSrc.value())
+		//- ################# Output the file
+		//- ################# Check for SVG, ask joe
+		+elem(e)
+
+//- Convert sourcecode/@originalSrc to src= and output a file
+mixin sourcecode(e)
+	- var originalSrc = e.attr('originalSrc')
+	if originalSrc
+		e.attr('src', originalSrc.value())
+		//- ################# Output the file
+		//- ################# Check for SVG, ask joe
+		+elem(e)
+
++root
+
+mixin foo(e)
+	- var a = $att(e)
+	- delete a["one"]
+	- console.log("The in was", a)
+	bar&attributes(a)
+
+mixin foo1(e)
+	- var a = $att(e)
+	- e.attr("name").remove()  //- removes this attribute
+	+elem(e)
+		bah
+
