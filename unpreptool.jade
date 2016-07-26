@@ -1,32 +1,25 @@
 include ./elements.jade
+const fs = require('fs')
+const dataUri = require('strong-data-uri');
 
-//- Remove <boilerplate>
+//- Remove <boilerplate> elements
 mixin boilerplate(e)
 	//- This is just here to finish the function
 
-//- Remove */@slugifiedName, */@pn, */@xml:base
-	//- ################ Find out how to get all elements
-	- var title = e.attr('title')
-	if title
-		- e.attr("doi").remove()
-
-//- Remove link/@doi, link/@issn, link/@convertedFrom
+//- Remove link/@doi, link/@issn, link/@convertedFrom attributes
 mixin link(e)
-	- var a = $att(e)
 	- e.attr("doi").remove()
 	- e.attr("issn").remove()
 	- e.attr("convertedFrom").remove()
 	+elem(e)
 
-//- Remove relref/@derivedLink
+//- Remove relref/@derivedLink attribute
 mixin relref(e)
-	- var a = $att(e)
 	- e.attr("derivedLink").remove()
 	+elem(e)
 
-//- Remove rfc/@prepTime, rfc/@expiresDate, rfc/@scripts
+//- Remove rfc/@prepTime, rfc/@expiresDate, rfc/@scripts attributes
 mixin rfc(e)
-	- var a = $att(e)
 	- e.attr("prepTime").remove()
 	- e.attr("expiresDate").remove()
 	- e.attr("scripts").remove()
@@ -34,13 +27,11 @@ mixin rfc(e)
 
 //- Remove section/@toc (all non-valuable attributes)
 mixin section(e)
-	- var a = $att(e)
 	//- ###################### Logic from 5.2.7 goes here
 	+elem(e)
 
-//- Remove xref/@derivedContent
+//- Remove xref/@derivedContent attribute
 mixin xref(e)
-	- var a = $att(e)
 	- e.attr("derivedContent").remove()
 	+elem(e)
 
@@ -48,45 +39,44 @@ mixin xref(e)
 mixin date(e)
 	date
 
-//- Convert artwork/@src=data: to src=base64decode(blah)
 //- Convert artwork/@originalSrc to src= and output a file
-//- Check for SVG, ask joe
+//-    Check for SVG, ask joe
+//- Convert artwork/@src=data: to decode to a file
 mixin artwork(e)
-	- var src = e.attr('src')
-	if src
-		- srcvalue = src.value()
-		- if srcvalue.beginswith("data:") //- ################ begins with "data:"
-			- thedata = srcvalue[5:] //- ##################### get past data:
-			- thebase64value = thedata.base64decode() //- ################# base64decode(thedata)
-			e.attr(src, thebase64value)
-		+elem(e)
 	- var originalSrc = e.attr('originalSrc')
 	if originalSrc
-		e.attr('src', originalSrc.value())
-		//- ################# Output the file
+		- var origsrcname = e.attr('src', originalSrc.value())
+		- var filecontents = fs.readFileSync(origsrcname, flag="r")
+		- var outfilename = origsrcname.split('/').pop()
+		//- ################ Should check if the file exists before overwriting
+		- fs.writeFileSync(outfilename, filecontents)
 		//- ################# Check for SVG, ask joe
+		- e.attr("originalSrc").remove()
+		- e.attr("src", outfilename)
+		+elem(e)
+	- var src = e.attr('src')
+	if src
+		- var srcvalue = src.value()
+		- var datamatch = srcvalue.match(/^data:(.)/)
+		if datamatch != null
+			- var databuffer = dataUri.decode(srcvalue);
+			//- ##################### Need to make a file name
+			- var outfilename = "THISISTEMPORARY" //- ####################### Hack
+			- fs.writeFileSync(outfilename, databuffer)
 		+elem(e)
 
 //- Convert sourcecode/@originalSrc to src= and output a file
 mixin sourcecode(e)
 	- var originalSrc = e.attr('originalSrc')
 	if originalSrc
-		e.attr('src', originalSrc.value())
-		//- ################# Output the file
+		- var origsrcname = e.attr('src', originalSrc.value())
+		- var filecontents = fs.readFileSync(origsrcname, flag="r")
+		- var outfilename = origsrcname.split('/').pop()
+		//- ################ Should check if the file exists before overwriting
+		- fs.writeFileSync(outfilename, filecontents)
 		//- ################# Check for SVG, ask joe
+		- e.attr("originalSrc").remove()
+		- e.attr("src", outfilename)
 		+elem(e)
 
 +root
-
-mixin foo(e)
-	- var a = $att(e)
-	- delete a["one"]
-	- console.log("The in was", a)
-	bar&attributes(a)
-
-mixin foo1(e)
-	- var a = $att(e)
-	- e.attr("name").remove()  //- removes this attribute
-	+elem(e)
-		bah
-

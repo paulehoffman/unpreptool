@@ -53,6 +53,10 @@ mixin nodes(list)
 mixin start_elem(e)
   - var a = $att(e, attributes)
   - a = $nsDecls(e, a)
+  //- Remove */@slugifiedName, */@pn, */@xml:base
+  - delete a["slugifiedName"]
+  - delete a["pn"]
+  - delete a["xml:base"]
   #{$qname(e)}&attributes(a)
     block
 
