@@ -1,6 +1,6 @@
 include ./elements.jade
 const fs = require('fs')
-const dataUri = require('strong-data-uri');
+const dataUri = require('strong-data-uri')
 
 //- Remove <boilerplate> elements
 mixin boilerplate(e)
@@ -8,21 +8,35 @@ mixin boilerplate(e)
 
 //- Remove link/@doi, link/@issn, link/@convertedFrom attributes
 mixin link(e)
-	- e.attr("doi").remove()
-	- e.attr("issn").remove()
-	- e.attr("convertedFrom").remove()
+	- var x = e.attr("doi")
+	if x
+		- e.attr("doi").remove()
+	- var x = e.attr("issn")
+	if x
+		- e.attr("issn").remove()
+	- var x = e.attr("convertedFrom")
+	if x
+		- e.attr("convertedFrom").remove()
 	+elem(e)
 
 //- Remove relref/@derivedLink attribute
 mixin relref(e)
-	- e.attr("derivedLink").remove()
+	- var x = e.attr("derivedLink")
+	if x
+		- e.attr("derivedLink").remove()
 	+elem(e)
 
 //- Remove rfc/@prepTime, rfc/@expiresDate, rfc/@scripts attributes
 mixin rfc(e)
-	- e.attr("prepTime").remove()
-	- e.attr("expiresDate").remove()
-	- e.attr("scripts").remove()
+	- var x = e.attr("prepTime")
+	if x
+		- e.attr("prepTime").remove()
+	- var x = e.attr("expiresDate")
+	if x
+		- e.attr("expiresDate").remove()
+	- var x = e.attr("scripts")
+	if x
+		- e.attr("scripts").remove()
 	+elem(e)
 
 //- Remove section/@toc (all non-valuable attributes)
@@ -32,7 +46,9 @@ mixin section(e)
 
 //- Remove xref/@derivedContent attribute
 mixin xref(e)
-	- e.attr("derivedContent").remove()
+	- var x = e.attr("derivedContent")
+	if x
+		- e.attr("derivedContent").remove()
 	+elem(e)
 
 //- Convert <date> to <date/>
@@ -58,7 +74,7 @@ mixin artwork(e)
 	if src
 		- var srcvalue = src.value()
 		- var datamatch = srcvalue.match(/^data:(.)/)
-		if datamatch != null
+		if datamatch
 			- var databuffer = dataUri.decode(srcvalue);
 			//- ##################### Need to make a file name
 			- var outfilename = "THISISTEMPORARY" //- ####################### Hack
